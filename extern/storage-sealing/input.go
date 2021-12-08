@@ -60,6 +60,15 @@ func (m *Sealing) handleWaitDeals(ctx statemachine.Context, sector SectorInfo) e
 				return ctx.Send(SectorAddPiece{})
 			},
 		}
+		if sector.CCUpdate {
+			// for checking that sector lifetime is long enough to fit deal
+			onChainInfo, err := m.Api.StateSectorGetInfo(ctx.Context(), m.maddr, sector.SectorNumber, TipSetToken{})
+			if err != nil {
+				return err
+			}
+
+			m.openSectors[sid].expiration = onChainInfo.Expiration
+		}
 	} else {
 		// make sure we're only accounting for pieces which were correctly added
 		// (note that m.assignedPieces[sid] will always be empty here)
@@ -358,6 +367,11 @@ func (m *Sealing) updateInput(ctx context.Context, sp abi.RegisteredSealProof) e
 
 		for id, sector := range m.openSectors {
 			avail := abi.PaddedPieceSize(ssize).Unpadded() - sector.used
+			// check that sector lifetime is long enough to fit deal
+			if sector.expiration > 0 && sector.expiration < piece.deal.DealProposal.EndEpoch {
+				log.Infof("CC update sector %d cannot fit deal, expiration %d before deal end epoch %d", id, sector.expiration, piece.deal.DealProposal.EndEpoch)
+				continue
+			}
 
 			if piece.size <= avail { // (note: if we have enough space for the piece, we also have enough space for inter-piece padding)
 				matches = append(matches, match{

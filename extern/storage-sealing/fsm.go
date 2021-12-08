@@ -133,6 +133,23 @@ var fsmPlanners = map[SectorState]func(events []statemachine.Event, state *Secto
 		on(SectorFinalizeFailed{}, FinalizeFailed),
 	),
 
+	// Snap deals
+	CCUpdate: planOne(
+		on(SectorStart{}, SnapDealsWaitDeals),
+	),
+	SnapDealsWaitDeals: planOne(
+		on(SectorAddPiece{}, SnapDealsAddPiece),
+		on(SectorStartPacking{}, SnapDealsPacking),
+	),
+	SnapDealsAddPiece: planOne(
+		on(SectorPieceAdded{}, SnapDealsWaitDeals),
+		apply(SectorStartPacking{}),
+		apply(SectorAddPiece{}),
+	),
+	SnapDealsPacking: planOne(
+		on(SectorPacked{}, UpdateReplica),
+	),
+
 	// Sealing errors
 
 	AddPieceFailed: planOne(
@@ -193,6 +210,7 @@ var fsmPlanners = map[SectorState]func(events []statemachine.Event, state *Secto
 	Proving: planOne(
 		on(SectorFaultReported{}, FaultReported),
 		on(SectorFaulty{}, Faulty),
+		on(SectorStartCCUpdate{}, CCUpdate),
 	),
 	Terminating: planOne(
 		on(SectorTerminating{}, TerminateWait),
@@ -402,6 +420,26 @@ func (m *Sealing) plan(events []statemachine.Event, state *SectorInfo) (func(sta
 		fallthrough
 	case FinalizeSector:
 		return m.handleFinalizeSector, processed, nil
+
+	// Snap deals updates
+	case CCUpdate:
+		return m.handleCCUpdate, processed, nil
+	case SnapDealsWaitDeals:
+		return m.handleWaitDeals, processed, nil
+	case SnapDealsAddPiece:
+		return m.handleAddPiece, processed, nil
+	case SnapDealsPacking:
+		return m.handlePacking, processed, nil
+	case UpdateReplica:
+		fallthrough
+	case ProveReplicaUpdate1:
+		fallthrough
+	case ProveReplicaUpdate2:
+		fallthrough
+	case ProveReplicaUpdateWait:
+		fallthrough
+	case FinalizeReplicaUpdate:
+		fallthrough
 
 	// Handled failure modes
 	case AddPieceFailed:

@@ -79,6 +79,18 @@ const (
 
 	FinalizeSector SectorState = "FinalizeSector"
 	Proving        SectorState = "Proving"
+
+	// snap deals / cc update
+	CCUpdate               SectorState = "CCUpdate"
+	SnapDealsWaitDeals                 = "SnapDealsWaitDeals"
+	SnapDealsAddPiece                  = "SnapDealsAddPiece"
+	SnapDealsPacking                   = "SnapDealsPacking"
+	UpdateReplica                      = "UpdateReplica"
+	ProveReplicaUpdate1                = "ProveReplicaUpdate1"
+	ProveReplicaUpdate2                = "ProveReplicaUpdate2"
+	ProveReplicaUpdateWait             = "ProveReplicaUpdateWait"
+	FinalizeReplicaUpdate              = "FinalizeReplicaUpdate"
+
 	// error modes
 	FailedUnrecoverable  SectorState = "FailedUnrecoverable"
 	AddPieceFailed       SectorState = "AddPieceFailed"

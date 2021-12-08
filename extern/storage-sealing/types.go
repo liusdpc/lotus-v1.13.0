@@ -73,7 +73,7 @@ type SectorInfo struct {
 
 	// PreCommit2
 	CommD *cid.Cid
-	CommR *cid.Cid
+	CommR *cid.Cid // SectorKey
 	Proof []byte
 
 	PreCommitInfo    *miner.SectorPreCommitInfo
@@ -90,6 +90,11 @@ type SectorInfo struct {
 	// Committing
 	CommitMessage *cid.Cid
 	InvalidProofs uint64 // failed proof computations (doesn't validate with proof inputs; can't compute)
+
+	// CCUpdate
+	CCUpdate           bool
+	NewCommR           *cid.Cid
+	ReplicaUpdateProof []byte
 
 	// Faults
 	FaultReportMsg *cid.Cid

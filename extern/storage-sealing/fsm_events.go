@@ -295,6 +295,14 @@ type SectorFinalizeFailed struct{ error }
 func (evt SectorFinalizeFailed) FormatError(xerrors.Printer) (next error) { return evt.error }
 func (evt SectorFinalizeFailed) apply(*SectorInfo)                        {}
 
+// Snap deals // CC update path
+
+type SectorStartCCUpdate struct{}
+
+func (evt SectorStartCCUpdate) apply(state *SectorInfo) {
+	state.CCUpdate = true
+}
+
 // Failed state recovery
 
 type SectorRetrySealPreCommit1 struct{}
