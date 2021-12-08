@@ -303,6 +303,42 @@ func (evt SectorStartCCUpdate) apply(state *SectorInfo) {
 	state.CCUpdate = true
 }
 
+type SectorReplicaUpdate struct {
+	Out storage.ReplicaUpdateOut
+}
+
+func (evt SectorReplicaUpdate) apply(state *SectorInfo) {
+	state.ReplicaUpdateOut = &evt.Out
+}
+
+type SectorProveReplicaUpdate1 struct {
+	Out storage.ReplicaVanillaProofs
+}
+
+func (evt SectorProveReplicaUpdate1) apply(state *SectorInfo) {
+	state.ProveReplicaUpdate1Out = evt.Out
+}
+
+type SectorProveReplicaUpdate2 struct {
+	Proof storage.ReplicaUpdateProof
+}
+
+func (evt SectorProveReplicaUpdate2) apply(state *SectorInfo) {
+	state.ReplicaUpdateProof = evt.Proof
+}
+
+type SectorReplicaUpdateSubmitted struct {
+	Message cid.Cid
+}
+
+func (evt SectorReplicaUpdateSubmitted) apply(state *SectorInfo) {
+	state.ReplicaUpdateMessage = &evt.Message
+}
+
+type SectorReplicaUpdateLanded struct{}
+
+func (evt SectorReplicaUpdateLanded) apply(state *SectorInfo) {}
+
 // Failed state recovery
 
 type SectorRetrySealPreCommit1 struct{}

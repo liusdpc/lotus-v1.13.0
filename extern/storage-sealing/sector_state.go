@@ -81,15 +81,16 @@ const (
 	Proving        SectorState = "Proving"
 
 	// snap deals / cc update
-	CCUpdate               SectorState = "CCUpdate"
-	SnapDealsWaitDeals                 = "SnapDealsWaitDeals"
-	SnapDealsAddPiece                  = "SnapDealsAddPiece"
-	SnapDealsPacking                   = "SnapDealsPacking"
-	UpdateReplica                      = "UpdateReplica"
-	ProveReplicaUpdate1                = "ProveReplicaUpdate1"
-	ProveReplicaUpdate2                = "ProveReplicaUpdate2"
-	ProveReplicaUpdateWait             = "ProveReplicaUpdateWait"
-	FinalizeReplicaUpdate              = "FinalizeReplicaUpdate"
+	CCUpdate              SectorState = "CCUpdate"
+	SnapDealsWaitDeals    SectorState = "SnapDealsWaitDeals"
+	SnapDealsAddPiece     SectorState = "SnapDealsAddPiece"
+	SnapDealsPacking      SectorState = "SnapDealsPacking"
+	UpdateReplica         SectorState = "UpdateReplica"
+	ProveReplicaUpdate1   SectorState = "ProveReplicaUpdate1"
+	ProveReplicaUpdate2   SectorState = "ProveReplicaUpdate2"
+	SubmitReplicaUpdate   SectorState = "SubmitReplicaUpdate"
+	ReplicaUpdateWait     SectorState = "ReplicaUpdateWait"
+	FinalizeReplicaUpdate SectorState = "FinalizeReplicaUpdate"
 
 	// error modes
 	FailedUnrecoverable  SectorState = "FailedUnrecoverable"

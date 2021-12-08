@@ -149,6 +149,21 @@ var fsmPlanners = map[SectorState]func(events []statemachine.Event, state *Secto
 	SnapDealsPacking: planOne(
 		on(SectorPacked{}, UpdateReplica),
 	),
+	UpdateReplica: planOne(
+		on(SectorReplicaUpdate{}, ProveReplicaUpdate1),
+	),
+	ProveReplicaUpdate1: planOne(
+		on(SectorProveReplicaUpdate1{}, ProveReplicaUpdate2),
+	),
+	ProveReplicaUpdate2: planOne(
+		on(SectorProveReplicaUpdate2{}, SubmitReplicaUpdate),
+	),
+	SubmitReplicaUpdate: planOne(
+		on(SectorReplicaUpdateSubmitted{}, ReplicaUpdateWait),
+	),
+	ReplicaUpdateWait: planOne(
+		on(SectorReplicaUpdateLanded{}, FinalizeReplicaUpdate),
+	),
 
 	// Sealing errors
 
@@ -431,12 +446,14 @@ func (m *Sealing) plan(events []statemachine.Event, state *SectorInfo) (func(sta
 	case SnapDealsPacking:
 		return m.handlePacking, processed, nil
 	case UpdateReplica:
-		fallthrough
+		return m.handleReplicaUpdate, processed, nil
 	case ProveReplicaUpdate1:
-		fallthrough
+		return m.handleProveReplicaUpdate1, processed, nil
 	case ProveReplicaUpdate2:
+		return m.handleProveReplicaUpdate2, processed, nil
+	case SubmitReplicaUpdate:
 		fallthrough
-	case ProveReplicaUpdateWait:
+	case ReplicaUpdateWait:
 		fallthrough
 	case FinalizeReplicaUpdate:
 		fallthrough
