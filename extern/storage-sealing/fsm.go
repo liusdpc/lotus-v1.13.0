@@ -164,7 +164,9 @@ var fsmPlanners = map[SectorState]func(events []statemachine.Event, state *Secto
 	ReplicaUpdateWait: planOne(
 		on(SectorReplicaUpdateLanded{}, FinalizeReplicaUpdate),
 	),
-
+	FinalizeReplicaUpdate: planOne(
+		on(SectorFinalized{}, Proving),
+	),
 	// Sealing errors
 
 	AddPieceFailed: planOne(
@@ -452,11 +454,11 @@ func (m *Sealing) plan(events []statemachine.Event, state *SectorInfo) (func(sta
 	case ProveReplicaUpdate2:
 		return m.handleProveReplicaUpdate2, processed, nil
 	case SubmitReplicaUpdate:
-		fallthrough
+		return m.handleSubmitReplicaUpdate, processed, nil
 	case ReplicaUpdateWait:
-		fallthrough
+		return m.handleReplicaUpdateWait, processed, nil
 	case FinalizeReplicaUpdate:
-		fallthrough
+		return m.handleFinalizeReplicaUpdate, processed, nil
 
 	// Handled failure modes
 	case AddPieceFailed:
