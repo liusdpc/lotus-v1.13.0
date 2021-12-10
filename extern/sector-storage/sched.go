@@ -2,6 +2,7 @@ package sectorstorage
 
 import (
 	"context"
+	"fmt"
 	"math/rand"
 	"sort"
 	"sync"
@@ -563,6 +564,7 @@ func (sh *scheduler) Info(ctx context.Context) (interface{}, error) {
 }
 
 func (sh *scheduler) Close(ctx context.Context) error {
+	fmt.Printf("We got a CLOSE!!\n")
 	close(sh.closing)
 	select {
 	case <-sh.closed:

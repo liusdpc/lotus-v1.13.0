@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/filecoin-project/go-state-types/abi"
+	"github.com/filecoin-project/go-state-types/network"
 	"github.com/filecoin-project/lotus/chain/types"
 	"github.com/filecoin-project/lotus/itests/kit"
 
@@ -18,8 +19,8 @@ func TestCCUpgrade(t *testing.T) {
 	kit.QuietMiningLogs()
 
 	for _, height := range []abi.ChainEpoch{
-		-1,  // before
-		162, // while sealing
+		//		-1,  // before
+		//		162, // while sealing
 		560, // after upgrade deal
 	} {
 		height := height // make linters happy by copying
@@ -30,11 +31,10 @@ func TestCCUpgrade(t *testing.T) {
 }
 
 func runTestCCUpgrade(t *testing.T, upgradeHeight abi.ChainEpoch) {
-	t.Skip()
 	ctx := context.Background()
 	blockTime := 5 * time.Millisecond
 
-	client, miner, ens := kit.EnsembleMinimal(t, kit.MockProofs(), kit.TurboUpgradeAt(upgradeHeight))
+	client, miner, ens := kit.EnsembleMinimal(t, kit.GenesisNetworkVersion(network.Version15))
 	ens.InterconnectAll().BeginMining(blockTime)
 
 	maddr, err := miner.ActorAddress(ctx)
@@ -43,6 +43,7 @@ func runTestCCUpgrade(t *testing.T, upgradeHeight abi.ChainEpoch) {
 	}
 
 	CCUpgrade := abi.SectorNumber(kit.DefaultPresealsPerBootstrapMiner + 1)
+	fmt.Printf("CCUpgrade: %d\n", CCUpgrade)
 
 	miner.PledgeSectors(ctx, 1, 0, nil)
 
@@ -50,7 +51,7 @@ func runTestCCUpgrade(t *testing.T, upgradeHeight abi.ChainEpoch) {
 	require.NoError(t, err)
 	require.Len(t, sl, 1, "expected 1 sector")
 	require.Equal(t, CCUpgrade, sl[0], "unexpected sector number")
-
+	fmt.Printf("sector list: %v\n", sl)
 	{
 		si, err := client.StateSectorGetInfo(ctx, maddr, CCUpgrade, types.EmptyTSK)
 		require.NoError(t, err)
@@ -59,6 +60,11 @@ func runTestCCUpgrade(t *testing.T, upgradeHeight abi.ChainEpoch) {
 
 	err = miner.SectorMarkForUpgrade(ctx, sl[0])
 	require.NoError(t, err)
+
+	sl, err = miner.SectorsList(ctx)
+	require.NoError(t, err)
+	require.Len(t, sl, 1, "expected 1 sector")
+	fmt.Printf("sector list: %v\n", sl)
 
 	dh := kit.NewDealHarness(t, client, miner, miner)
 	deal, res, inPath := dh.MakeOnlineDeal(ctx, kit.MakeFullDealParams{

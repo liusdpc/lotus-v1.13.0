@@ -2,13 +2,13 @@ package sealing
 
 import (
 	"bytes"
+	"fmt"
 
 	"github.com/filecoin-project/go-state-types/big"
 	"github.com/filecoin-project/go-state-types/exitcode"
 	statemachine "github.com/filecoin-project/go-statemachine"
 	api "github.com/filecoin-project/lotus/api"
 	"github.com/filecoin-project/lotus/chain/actors/builtin/miner"
-	"github.com/ipfs/go-cid"
 	"golang.org/x/xerrors"
 )
 
@@ -27,10 +27,11 @@ func (m *Sealing) handleReplicaUpdate(ctx statemachine.Context, sector SectorInf
 			return xerrors.Errorf("checkPieces sanity check error: %w", err)
 		}
 	}
-
+	log.Errorf("RU %d", sector.SectorNumber)
 	out, err := m.sealer.ReplicaUpdate(sector.sealingCtx(ctx.Context()), m.minerSector(sector.SectorType, sector.SectorNumber), sector.pieceInfos())
 	if err != nil {
 		// XXX error handling events and states
+		fmt.Printf("err: %s, out: %v\n", err, out)
 		panic("bad replica update")
 	}
 	return ctx.Send(SectorReplicaUpdate{
@@ -39,16 +40,14 @@ func (m *Sealing) handleReplicaUpdate(ctx statemachine.Context, sector SectorInf
 }
 
 func (m *Sealing) handleProveReplicaUpdate1(ctx statemachine.Context, sector SectorInfo) error {
-	var newSealed, newUnsealed cid.Cid
-	if sector.ReplicaUpdateOut == nil {
-		return xerrors.Errorf("invalid sector %d with nil ReplicaUpdate output", sector.SectorNumber)
-	} else {
-		newSealed, newUnsealed = sector.ReplicaUpdateOut.NewSealed, sector.ReplicaUpdateOut.NewUnsealed
+	if sector.UpdateSealed == nil || sector.UpdateUnsealed == nil {
+		return xerrors.Errorf("invalid sector %d with nil UpdateSealed or UpdateUnsealed output", sector.SectorNumber)
 	}
 	if sector.CommR == nil {
 		return xerrors.Errorf("invalid sector %d with nil CommR", sector.SectorNumber)
 	}
-	vanillaProofs, err := m.sealer.ProveReplicaUpdate1(sector.sealingCtx(ctx.Context()), m.minerSector(sector.SectorType, sector.SectorNumber), *sector.CommR, newSealed, newUnsealed)
+	log.Errorf("PR1 %d", sector.SectorNumber)
+	vanillaProofs, err := m.sealer.ProveReplicaUpdate1(sector.sealingCtx(ctx.Context()), m.minerSector(sector.SectorType, sector.SectorNumber), *sector.CommR, *sector.UpdateSealed, *sector.UpdateUnsealed)
 	if err != nil {
 		// XXX error handling events and states
 		panic("bad prove replica update 1")
@@ -59,12 +58,8 @@ func (m *Sealing) handleProveReplicaUpdate1(ctx statemachine.Context, sector Sec
 }
 
 func (m *Sealing) handleProveReplicaUpdate2(ctx statemachine.Context, sector SectorInfo) error {
-
-	var newSealed, newUnsealed cid.Cid
-	if sector.ReplicaUpdateOut == nil {
-		return xerrors.Errorf("invalid sector %d with nil ReplicaUpdate output", sector.SectorNumber)
-	} else {
-		newSealed, newUnsealed = sector.ReplicaUpdateOut.NewSealed, sector.ReplicaUpdateOut.NewUnsealed
+	if sector.UpdateSealed == nil || sector.UpdateUnsealed == nil {
+		return xerrors.Errorf("invalid sector %d with nil UpdateSealed or UpdateUnsealed output", sector.SectorNumber)
 	}
 	if sector.CommR == nil {
 		return xerrors.Errorf("invalid sector %d with nil CommR", sector.SectorNumber)
@@ -72,7 +67,7 @@ func (m *Sealing) handleProveReplicaUpdate2(ctx statemachine.Context, sector Sec
 	if sector.ProveReplicaUpdate1Out == nil {
 		return xerrors.Errorf("invalid sector %d with nil ProveReplicaUpdate1 output", sector.SectorNumber)
 	}
-	proof, err := m.sealer.ProveReplicaUpdate2(sector.sealingCtx(ctx.Context()), m.minerSector(sector.SectorType, sector.SectorNumber), *sector.CommR, newSealed, newUnsealed, sector.ProveReplicaUpdate1Out)
+	proof, err := m.sealer.ProveReplicaUpdate2(sector.sealingCtx(ctx.Context()), m.minerSector(sector.SectorType, sector.SectorNumber), *sector.CommR, *sector.UpdateSealed, *sector.UpdateUnsealed, sector.ProveReplicaUpdate1Out)
 	if err != nil {
 		// XXX error handling events and states
 		panic("bad prove replica update 2")
@@ -114,7 +109,7 @@ func (m *Sealing) handleSubmitReplicaUpdate(ctx statemachine.Context, sector Sec
 				SectorID:           sector.SectorNumber,
 				Deadline:           sl.Deadline,
 				Partition:          sl.Partition,
-				NewSealedSectorCID: cid.Undef,
+				NewSealedSectorCID: *sector.UpdateSealed,
 				Deals:              sector.dealIDs(),
 				UpdateProofType:    updateProof,
 				ReplicaProof:       sector.ReplicaUpdateProof,
@@ -171,8 +166,8 @@ func (m *Sealing) handleReplicaUpdateWait(ctx statemachine.Context, sector Secto
 		panic("failure doing replica update, sector no longe exists")
 	}
 
-	if !si.SealedCID.Equals(sector.ReplicaUpdateOut.NewSealed) {
-		log.Errorf("mismatch of expected onchain sealed cid after replica update, expected %s got %s", sector.ReplicaUpdateOut.NewSealed, si.SealedCID)
+	if !si.SealedCID.Equals(*sector.UpdateSealed) {
+		log.Errorf("mismatch of expected onchain sealed cid after replica update, expected %s got %s", sector.UpdateSealed, si.SealedCID)
 		panic("fail here")
 	}
 	return ctx.Send(SectorReplicaUpdateLanded{})

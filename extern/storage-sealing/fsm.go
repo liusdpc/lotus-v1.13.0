@@ -134,9 +134,6 @@ var fsmPlanners = map[SectorState]func(events []statemachine.Event, state *Secto
 	),
 
 	// Snap deals
-	CCUpdate: planOne(
-		on(SectorStart{}, SnapDealsWaitDeals),
-	),
 	SnapDealsWaitDeals: planOne(
 		on(SectorAddPiece{}, SnapDealsAddPiece),
 		on(SectorStartPacking{}, SnapDealsPacking),
@@ -227,7 +224,7 @@ var fsmPlanners = map[SectorState]func(events []statemachine.Event, state *Secto
 	Proving: planOne(
 		on(SectorFaultReported{}, FaultReported),
 		on(SectorFaulty{}, Faulty),
-		on(SectorStartCCUpdate{}, CCUpdate),
+		on(SectorStartCCUpdate{}, SnapDealsWaitDeals),
 	),
 	Terminating: planOne(
 		on(SectorTerminating{}, TerminateWait),
@@ -439,8 +436,6 @@ func (m *Sealing) plan(events []statemachine.Event, state *SectorInfo) (func(sta
 		return m.handleFinalizeSector, processed, nil
 
 	// Snap deals updates
-	case CCUpdate:
-		return m.handleCCUpdate, processed, nil
 	case SnapDealsWaitDeals:
 		return m.handleWaitDeals, processed, nil
 	case SnapDealsAddPiece:

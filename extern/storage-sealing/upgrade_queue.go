@@ -60,6 +60,7 @@ func (m *Sealing) MarkForUpgrade(ctx context.Context, id abi.SectorNumber) error
 			"Upgrade expiration before marking for upgrade", id, onChainInfo.Expiration)
 	}
 
+	log.Errorf("updating sector number %d", id)
 	// m.toUpgrade[id] = struct{}{}
 	m.sectors.Send(uint64(id), SectorStartCCUpdate{})
 
@@ -67,6 +68,7 @@ func (m *Sealing) MarkForUpgrade(ctx context.Context, id abi.SectorNumber) error
 }
 
 func (m *Sealing) handleCCUpdate(ctx statemachine.Context, sector SectorInfo) error {
+	log.Errorf("handle CC %d", sector.SectorNumber)
 	return m.sectors.Send(uint64(sector.SectorNumber), SectorStart{})
 }
 

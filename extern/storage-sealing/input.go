@@ -22,6 +22,7 @@ import (
 )
 
 func (m *Sealing) handleWaitDeals(ctx statemachine.Context, sector SectorInfo) error {
+	log.Errorf("begin waiting for deals sector number: %d, pieces: %d\n", sector.SectorNumber, len(sector.Pieces))
 	var used abi.UnpaddedPieceSize
 	for _, piece := range sector.Pieces {
 		used += piece.Piece.Size.Unpadded()
@@ -43,6 +44,7 @@ func (m *Sealing) handleWaitDeals(ctx statemachine.Context, sector SectorInfo) e
 
 	started, err := m.maybeStartSealing(ctx, sector, used)
 	if err != nil || started {
+		log.Errorf("sending %d packing", sector.SectorNumber)
 		delete(m.openSectors, m.minerSectorID(sector.SectorNumber))
 
 		m.inputLk.Unlock()
@@ -51,6 +53,7 @@ func (m *Sealing) handleWaitDeals(ctx statemachine.Context, sector SectorInfo) e
 	}
 
 	if _, has := m.openSectors[sid]; !has {
+		log.Errorf("putting %d in open sectors map", sid)
 		m.openSectors[sid] = &openSector{
 			used: used,
 			maybeAccept: func(cid cid.Cid) error {
@@ -430,6 +433,7 @@ func (m *Sealing) updateInput(ctx context.Context, sp abi.RegisteredSealProof) e
 	}
 
 	if len(toAssign) > 0 {
+		log.Errorf("we are trying to create a new sector with open sectors %v", m.openSectors)
 		if err := m.tryCreateDealSector(ctx, sp); err != nil {
 			log.Errorw("Failed to create a new sector for deals", "error", err)
 		}

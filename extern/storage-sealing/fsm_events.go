@@ -1,6 +1,7 @@
 package sealing
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/ipfs/go-cid"
@@ -301,6 +302,8 @@ type SectorStartCCUpdate struct{}
 
 func (evt SectorStartCCUpdate) apply(state *SectorInfo) {
 	state.CCUpdate = true
+	// Remove filler piece
+	state.Pieces = nil
 }
 
 type SectorReplicaUpdate struct {
@@ -308,7 +311,9 @@ type SectorReplicaUpdate struct {
 }
 
 func (evt SectorReplicaUpdate) apply(state *SectorInfo) {
-	state.ReplicaUpdateOut = &evt.Out
+	fmt.Printf("applying RU stuff to sector info state\n")
+	state.UpdateSealed = &evt.Out.NewSealed
+	state.UpdateUnsealed = &evt.Out.NewUnsealed
 }
 
 type SectorProveReplicaUpdate1 struct {
