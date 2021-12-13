@@ -636,11 +636,14 @@ func (s *WindowPoStScheduler) runPoStCycle(ctx context.Context, di dline.Info, t
 				return nil, err
 			}
 
+			log.Errorf("actually generating window post")
 			postOut, ps, err := s.prover.GenerateWindowPoSt(ctx, abi.ActorID(mid), sinfos, append(abi.PoStRandomness{}, rand...))
 			elapsed := time.Since(tsStart)
 
 			log.Infow("computing window post", "batch", batchIdx, "elapsed", elapsed)
-
+			if err != nil {
+				log.Errorf("error generating window post: %s", err)
+			}
 			if err == nil {
 				// If we proved nothing, something is very wrong.
 				if len(postOut) == 0 {
@@ -677,6 +680,7 @@ func (s *WindowPoStScheduler) runPoStCycle(ctx context.Context, di dline.Info, t
 					log.Errorw("generated incorrect window post proof", "post", postOut, "error", err)
 					continue
 				}
+				log.Errorf("we got a correct window post")
 
 				// Proof generation successful, stop retrying
 				somethingToProve = true
@@ -686,7 +690,7 @@ func (s *WindowPoStScheduler) runPoStCycle(ctx context.Context, di dline.Info, t
 			}
 
 			// Proof generation failed, so retry
-
+			log.Errorf("Retry")
 			if len(ps) == 0 {
 				// If we didn't skip any new sectors, we failed
 				// for some other reason and we need to abort.
