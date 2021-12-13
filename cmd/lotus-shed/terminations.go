@@ -158,10 +158,12 @@ var terminationsCmd = &cli.Command{
 					for _, sector := range sectors {
 						for _, deal := range sector.DealIDs {
 							prop, find, err := proposals.Get(deal)
-							if err != nil || !find {
+							if err != nil {
 								return err
 							}
-							fmt.Printf("%s, %d, %d, %s, %s, %s\n", msg.To, sector.SectorNumber, deal, prop.Client, prop.PieceCID, prop.Label)
+							if find {
+								fmt.Printf("%s, %d, %d, %s, %s, %s\n", msg.To, sector.SectorNumber, deal, prop.Client, prop.PieceCID, prop.Label)
+							}
 						}
 					}
 				}
