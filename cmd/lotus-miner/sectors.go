@@ -55,6 +55,7 @@ var sectorsCmd = &cli.Command{
 		sectorsSealDelayCmd,
 		sectorsCapacityCollateralCmd,
 		sectorsBatching,
+		sectorsCounter,  // 增加扇区号管理子命令
 	},
 }
 
@@ -1991,6 +1992,103 @@ var sectorsBatchingPendingPreCommit = &cli.Command{
 		}
 
 		fmt.Println("No sectors queued to be committed")
+		return nil
+	},
+}
+
+var sectorsCounter = &cli.Command{
+	Name: "counter",
+	Usage: "manage sector number counter",
+	Subcommands: []*cli.Command{
+		sectorsCounterGet,
+		sectorsCounterSet,
+		sectorsCounterNext,
+	},
+}
+
+var sectorsCounterGet = &cli.Command{
+	Name: "get",
+	Usage: "get the current sector number",
+	Action: func(cctx *cli.Context) error {
+		api, closer, err := lcli.GetStorageMinerAPI(cctx)
+		if err != nil {
+			return err
+		}
+		defer closer()
+		ctx := lcli.ReqContext(cctx)
+
+		sectorNum, err := api.SectorCounterGet(ctx)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println("Current sector counter number:", sectorNum)
+		return nil
+	},
+}
+
+var sectorsCounterSet = &cli.Command{
+	Name: "set",
+	Usage: "ADVANCED: set the next sector number manually",
+	ArgsUsage: "<sectorNum>",
+	Flags: []cli.Flag{
+		&cli.BoolFlag{
+			Name: "really-do-it",
+			Usage: "pass this flag if you know what you are doing",
+		},
+	},
+	Action: func(cctx *cli.Context) error {
+		if !cctx.Bool("really-do-it") {
+			return xerrors.Errorf("this is a command for advanced users, only use it if you are sure of what you are doing")
+		}
+		api, closer, err := lcli.GetStorageMinerAPI(cctx)
+		if err != nil {
+			return err
+		}
+		defer closer()
+		ctx := lcli.ReqContext(cctx)
+		if cctx.Args().Len() != 1 {
+			return xerrors.Errorf("must pass sector number")
+		}
+
+		sectorNum, err := strconv.ParseUint(cctx.Args().Get(0), 10, 64)
+		if err != nil {
+			return xerrors.Errorf("could not parse sector number: %w", err)
+		}
+
+		err = api.SectorCounterSet(ctx, abi.SectorNumber(sectorNum))
+		if err == nil {
+			fmt.Println("Sector counter set success, current sector number is:", sectorNum)
+		}
+		return nil
+	},
+}
+
+var sectorsCounterNext = &cli.Command{
+	Name: "next",
+	Usage: "ADVANCED: increase the sector number by 1",
+	Flags: []cli.Flag{
+		&cli.BoolFlag{
+			Name: "really-do-it",
+			Usage: "pass this flag if you know what you are doing",
+		},
+	},
+	Action: func(cctx *cli.Context) error {
+		if !cctx.Bool("really-do-it") {
+			return xerrors.Errorf("this is a command for advanced users, only use it if you are sure of what you are doing")
+		}
+		api, closer, err := lcli.GetStorageMinerAPI(cctx)
+		if err != nil {
+			return err
+		}
+		defer closer()
+		ctx := lcli.ReqContext(cctx)
+		sectorNum, err := api.SectorCounterNext(ctx)
+		if err != nil {
+			return nil
+		}
+
+		fmt.Println("Current sector counter number:", sectorNum)
 		return nil
 	},
 }

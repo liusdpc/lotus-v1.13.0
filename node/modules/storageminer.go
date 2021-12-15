@@ -144,6 +144,16 @@ func (s *sidsc) Next() (abi.SectorNumber, error) {
 	return abi.SectorNumber(i), err
 }
 
+// Get Added in 2021-12-15, manager Sector number
+func (s *sidsc) Get() (abi.SectorNumber, error) {
+	i, err := s.sc.Get()
+	return abi.SectorNumber(i), err
+}
+
+func (s *sidsc) Set(sectorNum abi.SectorNumber) error {
+	return s.sc.Set(unit64(sectorNum))
+}
+
 func SectorIDCounter(ds dtypes.MetadataDS) sealing.SectorIDCounter {
 	sc := storedcounter.New(ds, datastore.NewKey(StorageCounterDSPrefix))
 	return &sidsc{sc}

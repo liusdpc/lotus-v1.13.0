@@ -224,6 +224,19 @@ func (m *Sealing) SectorPreCommitPending(ctx context.Context) ([]abi.SectorID, e
 	return m.precommiter.Pending(ctx)
 }
 
+// Added in 2021-12-15, manage sector number
+func (m *Sealing) GetSectorNumber(ctx context.Context) (abi.SectorNumber, error) {
+	return m.sc.Get()
+}
+
+func (m *Sealing) SetSectorNumber(ctx context.Context, sid abi.SectorNumber) error {
+	return m.sc.Set(sid)
+}
+
+func (m *Sealing) NextSectorNumber(ctx context.Context) (abi.SectorNumber, error) {
+	return m.sc.Next()
+}
+
 func (m *Sealing) CommitFlush(ctx context.Context) ([]sealiface.CommitBatchRes, error) {
 	return m.commiter.Flush(ctx)
 }

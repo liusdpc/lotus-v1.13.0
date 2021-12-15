@@ -112,6 +112,12 @@ type StorageMiner interface {
 	// SectorCommitPending returns a list of pending Commit sectors to be sent in the next aggregate message
 	SectorCommitPending(ctx context.Context) ([]abi.SectorID, error) //perm:admin
 
+	// SectorCounterGet Added in 2021-12-15, manage sector number
+	SectorCounterGet(ctx context.Context) (abi.SectorNumber, error) // perm:read
+	SectorCounterSet(context.Context, abi.SectorNumber) error // perm:admin
+	SectorCounterNext(ctx context.Context) (abi.SectorNumber, error) // perm:admin
+
+
 	// WorkerConnect tells the node to connect to workers RPC
 	WorkerConnect(context.Context, string) error                              //perm:admin retry:true
 	WorkerStats(context.Context) (map[uuid.UUID]storiface.WorkerStats, error) //perm:admin

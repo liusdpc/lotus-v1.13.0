@@ -186,6 +186,9 @@ func (t *SectorInfo) keepUnsealedRanges(invert, alwaysKeep bool) []storage.Range
 
 type SectorIDCounter interface {
 	Next() (abi.SectorNumber, error)
+	// Get Added in 2021-12-15, manage sector number
+	Get() (abi.SectorNumber, error)
+	Set(abi.SectorNumber) error
 }
 
 type TipSetToken []byte

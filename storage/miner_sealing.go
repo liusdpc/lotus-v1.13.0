@@ -63,6 +63,19 @@ func (m *Miner) SectorPreCommitPending(ctx context.Context) ([]abi.SectorID, err
 	return m.sealing.SectorPreCommitPending(ctx)
 }
 
+// GetSectorNumber Added in 2021-12-15, manage sector number
+func (m *Miner) GetSectorNumber(ctx context.Context) (abi.SectorNumber, error) {
+	return m.sealing.GetSectorNumber(ctx)
+}
+
+func (m *Miner) SetSectorNumber(ctx context.Context, id abi.SectorNumber) error {
+	return m.sealing.SetSectorNumber(ctx, id)
+}
+
+func (m *Miner) NextSectorNumber(ctx context.Context) (abi.SectorNumber, error) {
+	return m.sealing.NextSectorNumber(ctx)
+}
+
 func (m *Miner) CommitFlush(ctx context.Context) ([]sealiface.CommitBatchRes, error) {
 	return m.sealing.CommitFlush(ctx)
 }

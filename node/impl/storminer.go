@@ -391,6 +391,19 @@ func (sm *StorageMinerAPI) SectorCommitPending(ctx context.Context) ([]abi.Secto
 	return sm.Miner.CommitPending(ctx)
 }
 
+// SectorCounterGet Added in 2021-12-15, manage sector number
+func (sm *StorageMinerAPI) SectorCounterGet(ctx context.Context) (abi.SectorNumber, error) {
+	return sm.Miner.GetSectorNumber(ctx)
+}
+
+func (sm *StorageMinerAPI) SectorCounterSet(ctx context.Context, id abi.SectorNumber) error {
+	return sm.Miner.SetSectorNumber(ctx, id)
+}
+
+func (sm *StorageMinerAPI) SectorCounterNext(ctx context.Context) (abi.SectorNumber, error) {
+	return sm.Miner.NextSectorNumber(ctx)
+}
+
 func (sm *StorageMinerAPI) WorkerConnect(ctx context.Context, url string) error {
 	w, err := connectRemoteWorker(ctx, sm, url)
 	if err != nil {
