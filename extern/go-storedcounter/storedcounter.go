@@ -48,7 +48,7 @@ func (sc *StoredCounter) Next() (uint64, error) {
 	return next, sc.ds.Put(ctx, sc.name, buf[:size])
 }
 
-// Added in 2021-12-15, Get current sector number
+// Get Added in 2021-12-15, Get current sector number
 func (sc *StoredCounter) Get() (uint64, error) {
 	sc.lock.Lock()
 	defer sc.lock.Unlock()

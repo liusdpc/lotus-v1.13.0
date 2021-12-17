@@ -71,7 +71,7 @@ require (
 	github.com/ipfs/go-blockservice v0.1.5
 	github.com/ipfs/go-cid v0.1.0
 	github.com/ipfs/go-cidutil v0.0.2
-	github.com/ipfs/go-datastore v0.4.6
+	//github.com/ipfs/go-datastore v0.4.6
 	github.com/ipfs/go-ds-badger2 v0.1.1-0.20200708190120-187fc06f714e
 	github.com/ipfs/go-ds-leveldb v0.4.2
 	github.com/ipfs/go-ds-measure v0.1.0
@@ -160,6 +160,10 @@ require (
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
 	gopkg.in/cheggaaa/pb.v1 v1.0.28
 	gotest.tools v2.2.0+incompatible
+
+	github.com/ipfs/go-datastore v0.5.1
+//    github.com/stretchr/testify v1.5.1
+    gopkg.in/yaml.v2 v2.2.4 // indirect
 )
 
 replace github.com/libp2p/go-libp2p-yamux => github.com/libp2p/go-libp2p-yamux v0.5.1
@@ -167,4 +171,4 @@ replace github.com/libp2p/go-libp2p-yamux => github.com/libp2p/go-libp2p-yamux v
 replace github.com/filecoin-project/filecoin-ffi => ./extern/filecoin-ffi
 
 replace github.com/filecoin-project/test-vectors => ./extern/test-vectors
-replace github.com/filecoin-project/go-storedcounter => ./extern/go-storedcounter
+//replace github.com/filecoin-project/go-storedcounter => ./extern/go-storedcounter

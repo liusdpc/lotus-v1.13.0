@@ -16,7 +16,7 @@ import (
 	"github.com/filecoin-project/go-state-types/big"
 	"github.com/filecoin-project/go-state-types/exitcode"
 	"github.com/filecoin-project/go-state-types/network"
-	"github.com/filecoin-project/go-storedcounter"
+	"github.com/filecoin-project/lotus/extern/go-storedcounter"
 
 	"github.com/filecoin-project/lotus/api"
 	"github.com/filecoin-project/lotus/api/v1api"
