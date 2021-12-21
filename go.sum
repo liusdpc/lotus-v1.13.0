@@ -345,7 +345,6 @@ github.com/filecoin-project/go-statemachine v1.0.1/go.mod h1:jZdXXiHa61n4NmgWFG4
 github.com/filecoin-project/go-statestore v0.1.0/go.mod h1:LFc9hD+fRxPqiHiaqUEZOinUJB4WARkRfNl10O7kTnI=
 github.com/filecoin-project/go-statestore v0.1.1 h1:ufMFq00VqnT2CAuDpcGnwLnCX1I/c3OROw/kXVNSTZk=
 github.com/filecoin-project/go-statestore v0.1.1/go.mod h1:LFc9hD+fRxPqiHiaqUEZOinUJB4WARkRfNl10O7kTnI=
-github.com/filecoin-project/go-storedcounter v0.0.0-20200421200003-1c99c62e8a5b h1:fkRZSPrYpk42PV3/lIXiL0LHetxde7vyYYvSsttQtfg=
 github.com/filecoin-project/go-storedcounter v0.0.0-20200421200003-1c99c62e8a5b/go.mod h1:Q0GQOBtKf1oE10eSXSlhN45kDBdGvEcVOqMiffqX+N8=
 github.com/filecoin-project/specs-actors v0.9.4/go.mod h1:BStZQzx5x7TmCkLv0Bpa07U6cPKol6fd3w9KjMPZ6Z4=
 github.com/filecoin-project/specs-actors v0.9.12/go.mod h1:TS1AW/7LbG+615j4NsjMK1qlpAwaFsG9w0V2tg2gSao=
@@ -1236,6 +1235,8 @@ github.com/libp2p/go-yamux/v2 v2.0.0/go.mod h1:NVWira5+sVUIU6tu1JWvaRn1dRnG+cawO
 github.com/libp2p/zeroconf/v2 v2.0.0/go.mod h1:J85R/d9joD8u8F9aHM8pBXygtG9W02enEwS+wWeL6yo=
 github.com/lightstep/lightstep-tracer-common/golang/gogo v0.0.0-20190605223551-bc2310a04743/go.mod h1:qklhhLq1aX+mtWk9cPHPzaBjWImj5ULL6C7HFJtXQMM=
 github.com/lightstep/lightstep-tracer-go v0.18.1/go.mod h1:jlF1pusYV4pidLvZ+XD0UBX0ZE6WURAspgAczcDHrL4=
+github.com/liusdpc/go-storedcounter v0.0.2 h1:uj8E7QmglE3So/rj5y5sLxlqw4mb42MKzqBfEFYFL8s=
+github.com/liusdpc/go-storedcounter v0.0.2/go.mod h1:o2Z2TzU4zW/VoTqRmmEbav/87ca7XCAN7Rgvx+BByOM=
 github.com/lucas-clemente/quic-go v0.11.2/go.mod h1:PpMmPfPKO9nKJ/psF49ESTAGQSdfXxlg1otPbEB2nOw=
 github.com/lucas-clemente/quic-go v0.16.0/go.mod h1:I0+fcNTdb9eS1ZcjQZbDVPGchJ86chcIxPALn9lEJqE=
 github.com/lucas-clemente/quic-go v0.19.3/go.mod h1:ADXpNbTQjq1hIzCpB+y/k5iz4n4z4IwqoLb94Kh5Hu8=

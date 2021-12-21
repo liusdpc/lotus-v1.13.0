@@ -16,7 +16,7 @@ The module provides a simple counter on top of a go-ipfs-datastore interface
 ## Install
 
 ```
-go get github.com/filecoin-project/go-storedcounter
+go get github.com/liusdpc/go-storedcounter
 ```
 
 ## Usage
@@ -26,7 +26,7 @@ Create/load a counter for a datastore and key:
 ```golang
 import(
   "github.com/ipfs/go-datastore"
-  "github.com/filecoin-project/go-storedcounter"
+  "github.com/liusdpc/go-storedcounter"
 )
 
 var ds datastore.Datastore

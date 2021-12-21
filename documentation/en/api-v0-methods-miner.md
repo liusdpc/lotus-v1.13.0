@@ -110,6 +110,9 @@
   * [SectorAddPieceToAny](#SectorAddPieceToAny)
   * [SectorCommitFlush](#SectorCommitFlush)
   * [SectorCommitPending](#SectorCommitPending)
+  * [SectorCounterGet](#SectorCounterGet)
+  * [SectorCounterNext](#SectorCounterNext)
+  * [SectorCounterSet](#SectorCounterSet)
   * [SectorGetExpectedSealDuration](#SectorGetExpectedSealDuration)
   * [SectorGetSealDelay](#SectorGetSealDelay)
   * [SectorMarkForUpgrade](#SectorMarkForUpgrade)
@@ -1779,6 +1782,41 @@ Perms: admin
 Inputs: `null`
 
 Response: `null`
+
+### SectorCounterGet
+SectorCounterGet Added in 2021-12-15, manage sector number
+
+
+Perms: read
+
+Inputs: `null`
+
+Response: `9`
+
+### SectorCounterNext
+perm:admin
+
+
+Perms: admin
+
+Inputs: `null`
+
+Response: `9`
+
+### SectorCounterSet
+perm:admin
+
+
+Perms: admin
+
+Inputs:
+```json
+[
+  9
+]
+```
+
+Response: `{}`
 
 ### SectorGetExpectedSealDuration
 SectorGetExpectedSealDuration gets the expected time for a sector to seal

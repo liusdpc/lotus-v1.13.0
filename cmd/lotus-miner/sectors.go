@@ -55,7 +55,7 @@ var sectorsCmd = &cli.Command{
 		sectorsSealDelayCmd,
 		sectorsCapacityCollateralCmd,
 		sectorsBatching,
-		sectorsCounter,  // 增加扇区号管理子命令
+		sectorsCounter, // 增加扇区号管理子命令
 	},
 }
 
@@ -1997,7 +1997,7 @@ var sectorsBatchingPendingPreCommit = &cli.Command{
 }
 
 var sectorsCounter = &cli.Command{
-	Name: "counter",
+	Name:  "counter",
 	Usage: "manage sector number counter",
 	Subcommands: []*cli.Command{
 		sectorsCounterGet,
@@ -2007,7 +2007,7 @@ var sectorsCounter = &cli.Command{
 }
 
 var sectorsCounterGet = &cli.Command{
-	Name: "get",
+	Name:  "get",
 	Usage: "get the current sector number",
 	Action: func(cctx *cli.Context) error {
 		api, closer, err := lcli.GetStorageMinerAPI(cctx)
@@ -2028,12 +2028,12 @@ var sectorsCounterGet = &cli.Command{
 }
 
 var sectorsCounterSet = &cli.Command{
-	Name: "set",
-	Usage: "ADVANCED: set the next sector number manually",
+	Name:      "set",
+	Usage:     "ADVANCED: set the next sector number manually",
 	ArgsUsage: "<sectorNum>",
 	Flags: []cli.Flag{
 		&cli.BoolFlag{
-			Name: "really-do-it",
+			Name:  "really-do-it",
 			Usage: "pass this flag if you know what you are doing",
 		},
 	},
@@ -2065,11 +2065,11 @@ var sectorsCounterSet = &cli.Command{
 }
 
 var sectorsCounterNext = &cli.Command{
-	Name: "next",
+	Name:  "next",
 	Usage: "ADVANCED: increase the sector number by 1",
 	Flags: []cli.Flag{
 		&cli.BoolFlag{
-			Name: "really-do-it",
+			Name:  "really-do-it",
 			Usage: "pass this flag if you know what you are doing",
 		},
 	},

@@ -12,7 +12,7 @@ require (
 	github.com/filecoin-project/go-fil-markets v1.12.0
 	github.com/filecoin-project/go-jsonrpc v0.1.4-0.20210217175800-45ea43ac2bec
 	github.com/filecoin-project/go-state-types v0.1.1-0.20210915140513-d354ccf10379
-	github.com/filecoin-project/go-storedcounter v0.0.0-20200421200003-1c99c62e8a5b
+	github.com/liusdpc/go-storedcounter v0.0.2
 	github.com/filecoin-project/lotus v0.0.0-00010101000000-000000000000
 	github.com/filecoin-project/specs-actors v0.9.14
 	github.com/google/uuid v1.3.0

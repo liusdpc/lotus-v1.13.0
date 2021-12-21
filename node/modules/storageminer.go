@@ -33,7 +33,6 @@ import (
 	"github.com/filecoin-project/go-paramfetch"
 	"github.com/filecoin-project/go-state-types/abi"
 	"github.com/filecoin-project/go-statestore"
-	"github.com/filecoin-project/lotus/extern/go-storedcounter"
 	"github.com/ipfs/go-cid"
 	"github.com/ipfs/go-datastore"
 	"github.com/ipfs/go-datastore/namespace"
@@ -42,6 +41,7 @@ import (
 	gsnet "github.com/ipfs/go-graphsync/network"
 	"github.com/ipfs/go-graphsync/storeutil"
 	"github.com/libp2p/go-libp2p-core/host"
+	"github.com/liusdpc/go-storedcounter"
 
 	sectorstorage "github.com/filecoin-project/lotus/extern/sector-storage"
 	"github.com/filecoin-project/lotus/extern/sector-storage/ffiwrapper"
@@ -151,7 +151,7 @@ func (s *sidsc) Get() (abi.SectorNumber, error) {
 }
 
 func (s *sidsc) Set(sectorNum abi.SectorNumber) error {
-	return s.sc.Set(unit64(sectorNum))
+	return s.sc.Set(uint64(sectorNum))
 }
 
 func SectorIDCounter(ds dtypes.MetadataDS) sealing.SectorIDCounter {

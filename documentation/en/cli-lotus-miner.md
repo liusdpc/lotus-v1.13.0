@@ -1500,6 +1500,7 @@ COMMANDS:
    set-seal-delay     Set the time, in minutes, that a new sector waits for deals before sealing starts
    get-cc-collateral  Get the collateral required to pledge a committed capacity sector
    batching           manage batch sector operations
+   counter            manage sector number counter
    help, h            Shows a list of commands or help for one command
 
 OPTIONS:
@@ -1813,6 +1814,67 @@ USAGE:
 OPTIONS:
    --publish-now  send a batch now (default: false)
    --help, -h     show help (default: false)
+   
+```
+
+### lotus-miner sectors counter
+```
+NAME:
+   lotus-miner sectors counter - manage sector number counter
+
+USAGE:
+   lotus-miner sectors counter command [command options] [arguments...]
+
+COMMANDS:
+   get      get the current sector number
+   set      ADVANCED: set the next sector number manually
+   next     ADVANCED: increase the sector number by 1
+   help, h  Shows a list of commands or help for one command
+
+OPTIONS:
+   --help, -h     show help (default: false)
+   --version, -v  print the version (default: false)
+   
+```
+
+#### lotus-miner sectors counter get
+```
+NAME:
+   lotus-miner sectors counter get - get the current sector number
+
+USAGE:
+   lotus-miner sectors counter get [command options] [arguments...]
+
+OPTIONS:
+   --help, -h  show help (default: false)
+   
+```
+
+#### lotus-miner sectors counter set
+```
+NAME:
+   lotus-miner sectors counter set - ADVANCED: set the next sector number manually
+
+USAGE:
+   lotus-miner sectors counter set [command options] <sectorNum>
+
+OPTIONS:
+   --really-do-it  pass this flag if you know what you are doing (default: false)
+   --help, -h      show help (default: false)
+   
+```
+
+#### lotus-miner sectors counter next
+```
+NAME:
+   lotus-miner sectors counter next - ADVANCED: increase the sector number by 1
+
+USAGE:
+   lotus-miner sectors counter next [command options] [arguments...]
+
+OPTIONS:
+   --really-do-it  pass this flag if you know what you are doing (default: false)
+   --help, -h      show help (default: false)
    
 ```
 
