@@ -49,6 +49,16 @@ var runCmd = &cli.Command{
 			Usage: "manage open file limit",
 			Value: true,
 		},
+		&cli.BoolFlag{
+			Name:  "window-post",
+			Usage: "enable window PoSt (default: true)",
+			Value: true,
+		},
+		&cli.BoolFlag{
+			Name:  "winning-post",
+			Usage: "enable winning PoSt (default: true)",
+			Value: true,
+		},
 	},
 	Action: func(cctx *cli.Context) error {
 		if !cctx.Bool("enable-gpu-proving") {
@@ -57,6 +67,31 @@ var runCmd = &cli.Command{
 				return err
 			}
 		}
+
+		if cctx.Bool("window-post") {
+			err := os.Setenv("LOTUS_WINDOW_POST", "true")
+			if err != nil {
+				return err
+			}
+		} else {
+			err := os.Unsetenv("LOTUS_WINDOW_POST")
+			if err != nil {
+				return err
+			}
+		}
+
+		if cctx.Bool("winning-post") {
+			err := os.Setenv("LOTUS_WINNING_POST", "true")
+			if err != nil {
+				return err
+			}
+		} else {
+			err := os.Unsetenv("LOTUS_WINNING_POST")
+			if err != nil {
+				return err
+			}
+		}
+
 
 		ctx, _ := tag.New(lcli.DaemonContext(cctx),
 			tag.Insert(metrics.Version, build.BuildVersion),

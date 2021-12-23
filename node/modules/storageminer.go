@@ -260,8 +260,16 @@ func StorageMiner(fc config.MinerFeeConfig) func(params StorageMinerParams) (*st
 
 		lc.Append(fx.Hook{
 			OnStart: func(context.Context) error {
-				go fps.Run(ctx)
+				//go fps.Run(ctx)
+				//return sm.Run(ctx)
+				if _, ok := os.LookupEnv("LOTUS_WINDOW_POST"); ok {
+					log.Warnf("This miner will do windowPost")
+					go fps.Run(ctx)
+				} else {
+					log.Warnf("This miner will be disabled windowPost")
+				}
 				return sm.Run(ctx)
+
 			},
 			OnStop: sm.Stop,
 		})
